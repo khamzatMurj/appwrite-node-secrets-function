@@ -42,3 +42,40 @@ npm test
 ```
 
 The function response only includes each variable's configured status and value length; secret values are never returned.
+
+## Nhost deployment
+
+The repository also contains an Nhost Function at `functions/secrets-status.js`. Its environment configuration is defined in `nhost/nhost.toml` and references the same three secrets.
+
+For local development, let the Nhost CLI generate its required internal secrets, then add the three entries from `.secrets.example` to the generated `.secrets` file and replace the example values:
+
+```bash
+nhost config default
+```
+
+The `.secrets` file is ignored by Git and must never be committed.
+
+Create the same keys in the Nhost Dashboard under **Project Settings → Secrets**:
+
+```text
+USERNAME
+PASSWORD
+API_KEY
+```
+
+Then link and run the project:
+
+```bash
+nhost login
+nhost link
+nhost config validate
+nhost up
+```
+
+Test the local function at:
+
+```bash
+curl https://local.functions.local.nhost.run/v1/secrets-status
+```
+
+The Nhost response, like the Appwrite response, reports only configured status and value lengths.
